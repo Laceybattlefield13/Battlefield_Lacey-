@@ -4618,6 +4618,455 @@ for i in corners:
 
 
 
+## Edge Detection
+
+```python
+import cv2
+```
+
+
+```python
+import numpy as np
+```
+
+
+```python
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+img = cv2.imread("Mushroom.jpg")
+plt.imshow(img)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2308232e10>
+
+
+
+
+![png](output_3_1.png)
+
+
+
+```python
+edges = cv2.Canny(image =img, threshold1 = 127, threshold2 = 127)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2308218250>
+
+
+
+
+![png](output_4_1.png)
+
+
+
+```python
+med_value = np.median(img)
+med_value
+```
+
+
+
+
+    136.0
+
+
+
+
+```python
+lower = int(max(0, 0.7*med_value))
+upper = int(min(255, 1.3*med_value))
+
+edges = cv2.Canny(img, threshold1 = lower, threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2308173a50>
+
+
+
+
+![png](output_6_1.png)
+
+
+
+```python
+edges = cv2.Canny(image = img, threshold1 = lower, threshold2 = upper +100)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f23080e40d0>
+
+
+
+
+![png](output_7_1.png)
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (5,5))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f23080c8450>
+
+
+
+
+![png](output_8_1.png)
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (7,7))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2308031590>
+
+
+
+
+![png](output_9_1.png)
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (5,5))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper + 50)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2302ff3710>
+
+
+
+
+![png](output_10_1.png)
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (5,5))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper + 100)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2302f5a810>
+
+
+
+
+![png](output_11_1.png)
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (7,7))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper + 50)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2302ec1950>
+
+
+
+
+![png](output_12_1.png)
+
+
+
+```python
+blurred_img = cv2.blur(img, ksize = (8,8))
+
+edges = cv2.Canny(image=blurred_img,
+                 threshold1 = lower,
+                 threshold2 = upper)
+
+plt.imshow(edges)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f2302eaaa50>
+
+
+
+
+![png](output_13_1.png)
+
+
+
+```python
+
+```
+
+
+## Feature Matching
+
+```python
+import cv2 
+import numpy as np
+import matplotlib.pyplot as plt
+%matplotlib inline
+```
+
+
+```python
+def display(img, cmap = 'gray'):
+    fig = plt.figure(figsize = (12, 10))
+    ax = fig.add_subplot(111)
+    ax.imshow(img, cmap = 'gray')
+```
+
+
+```python
+Capt_crunch = cv2.imread("Capt_crunch.jpg")
+display(Capt_crunch)
+```
+
+
+![png](output_2_0.png)
+
+
+
+```python
+Cereal = cv2.imread('Cereal.jpg', 0)
+display(Cereal)
+```
+
+
+![png](output_3_0.png)
+
+
+
+```python
+orb = cv2.ORB_create()
+
+kp1,des1 = orb.detectAndCompute(Capt_crunch, mask=None)
+kp2,des2 = orb.detectAndCompute(Cereal, mask=None)
+```
+
+
+```python
+bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck = True)
+matches= bf.match(des1, des2)
+```
+
+
+```python
+matches = sorted(matches, key = lambda x:x.distance)
+```
+
+
+```python
+Capt_crunch_matches = cv2.drawMatches(Capt_crunch, kp1, Cereal, kp2, matches[:25], None, flags = 2)
+```
+
+
+```python
+display(Capt_crunch_matches)
+```
+
+
+![png](output_8_0.png)
+
+
+
+```python
+sift = cv2.SIFT_create()
+```
+
+
+```python
+kp1, des1 = sift.detectAndCompute(Capt_crunch, None)
+kp2, des2 = sift.detectAndCompute(Cereal, None)
+```
+
+
+```python
+bf = cv2.BFMatcher()
+matches = bf.knnMatch(des1, des2, k=2)
+```
+
+
+```python
+good = []
+
+for match1, match2 in matches:
+    if match1.distance < 0.75*match2.distance:
+        good.append([match1])
+```
+
+
+```python
+print('Length of total matches:', len(matches))
+print('Length of good matches:', len(good))
+```
+
+    Length of total matches: 3017
+    Length of good matches: 39
+
+
+
+```python
+sift_matches = cv2.drawMatchesKnn(Capt_crunch, kp1, Cereal, kp2, good, None, flags =2)
+display(sift_matches)
+```
+
+
+![png](output_14_0.png)
+
+
+
+```python
+sift = cv2.SIFT_create()
+
+kp1, des1 = sift.detectAndCompute(Capt_crunch, None)
+kp2, des2 = sift.detectAndCompute(Cereal, None)
+```
+
+
+```python
+flann_index_KDtree = 0
+index_params = dict(algorithm=flann_index_KDtree, trees = 5)
+search_params = dict(checks=50)
+```
+
+
+```python
+flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+matches = flann.knnMatch(des1, des2, k=2)
+
+good = []
+
+for match1, match2, in matches:
+    if match1.distance < 0.75*match2.distance:
+        good.append([match1])
+```
+
+
+```python
+flann_matches = cv2.drawMatchesKnn(Capt_crunch, kp1, Cereal, kp2, good, None, flags = 0)
+display(flann_matches)
+```
+
+
+![png](output_18_0.png)
+
+
+
+```python
+sift = cv2.SIFT_create()
+
+kp1, des1 = sift.detectAndCompute(Capt_crunch, None)
+kp2, des2 = sift.detectAndCompute(Cereal, None)
+```
+
+
+```python
+flann_index_KDtree = 0
+index_params = dict(algorithm= flann_index_KDtree, trees = 5)
+search_param = dict(checks = 50)
+```
+
+
+```python
+flann = cv2.FlannBasedMatcher(index_params, search_params)
+
+matches = flann.knnMatch(des1, des2, k = 2)
+```
+
+
+```python
+matchesMask = [[0,0] for i in range(len(matches))]
+```
+
+
+```python
+for i, (match1, match2) in enumerate(matches):
+    if match1.distance <0.75*match2.distance:
+        matchesMask[i] = [1,0]
+        
+draw_params = dict(matchColor = (0,255,0),
+                  singlePointColor = (255,0,0),
+                  matchesMask = matchesMask,
+                  flags = 0)
+```
+
+
+```python
+flann_matches = cv2.drawMatchesKnn(Capt_crunch, kp1, Cereal, kp2, matches, None, **draw_params)
+display(flann_matches)
+```
+
+
+![png](output_24_0.png)
+
+
+
+```python
+
+```
 
 
 
