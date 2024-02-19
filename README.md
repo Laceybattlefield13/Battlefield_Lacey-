@@ -4442,7 +4442,7 @@ plt.imshow(large_img)
 
 ![png](output_21_1.png)
 
-## CV Basics 3
+## Open CV 3
 
 ```python
 # https://github.com/worklifesg/Python-for-Computer-Vision-with-OpenCV-and-Deep-Learning
@@ -5282,7 +5282,186 @@ display(flann_matches)
 ```
 
 
+## Object Tracking
 
+```python
+import cv2 
+```
+
+
+```python
+import numpy as np
+```
+
+
+```python
+import matplotlib.pyplot as plt
+```
+
+
+```python
+%matplotlib inline
+```
+
+
+```python
+full = cv2.imread('sunflower.jpg')
+```
+
+
+```python
+full = cv2.cvtColor(full, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(full)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f7b0bb03890>
+
+
+
+
+![png](output_6_1.png)
+
+
+
+```python
+test = cv2.imread('sunflower_field.jpg')
+```
+
+
+```python
+test = cv2.cvtColor(test, cv2.COLOR_BGR2RGB)
+```
+
+
+```python
+plt.imshow(test)
+```
+
+
+
+
+    <matplotlib.image.AxesImage at 0x7f7b0b2ae950>
+
+
+
+
+![png](output_9_1.png)
+
+
+
+```python
+print('sunflower image shape:', full.shape)
+print('sunflower_field image shape:', test.shape)
+```
+
+    sunflower image shape: (824, 900, 3)
+    sunflower_field image shape: (900, 1440, 3)
+
+
+
+```python
+methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR', 'cv2.TM_CCORR_NORMED', 'cv2.TM_SQDIFF', 'cv2.TM_SQDIFF_NORMED']
+```
+
+
+```python
+for m in methods:
+    
+    test_copy = test.copy()
+    method = eval(m)
+    
+    res = cv2.matchTemplate(test_copy, full, method)
+    
+    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    
+    if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
+        top_left = min_loc
+    else:
+        top_left = max_loc
+        
+    height, width, channels = full.shape
+    bottom_right = (top_left[0] + width, top_left[1] + height)
+    
+    cv2.rectangle(test_copy, top_left, bottom_right, (255,0,0),10)
+    
+    plt.subplot(121)
+    plt.imshow(res)
+    plt.title("Heatmap of sunflower matching")
+    plt.subplot(122)
+    plt.imshow(test_copy)
+    plt.title('Detection of sunflower')
+    
+    plt.suptitle(m)
+    
+    plt.show()
+    print('\n')
+    print('\n')
+```
+
+
+![png](output_12_0.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_12_2.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_12_4.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_12_6.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_12_8.png)
+
+
+    
+    
+    
+    
+
+
+
+![png](output_12_10.png)
+
+
+    
+    
+    
 
 
 
